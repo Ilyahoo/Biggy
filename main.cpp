@@ -7,6 +7,8 @@ int main()
 {   
 	BigInt a1;
 	cin >> a1;
+	BigInt a2;
+	cin >> a2;
 
     
     return 0;
