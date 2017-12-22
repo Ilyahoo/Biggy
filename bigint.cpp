@@ -123,7 +123,43 @@ BigInt BigInt::operator+(BigInt& rhs){
 	Sum_Obj.Set_Sign(false);
 	Sum_Obj.FromString(G_Sum,0);
 	}
+	//Ya99imach dha mzal khmi G_Sign != rhs.G_sign
+	//
 }
+
+BigInt BigInt::operator*(BigInt& rhs){
+	BigInt Pro_Obj;
+	vector<int> Soms;
+	vector<int> Lines = 0;
+
+
+	Pro_Obj.Set_Sign((this->G_Sign==rhs.G_Sign)?1:0);
+	for(vector<int>::iterator F_it = this->Number.begin(); F_it != this->Number.end(); F_it++){
+		
+		int C_Pro = 0;
+		int Carry = 0;
+		vector<int> Line_Pro = 0;
+		
+		for(vector<int>::iterator S_it = rhs.Number.begin(); S_it != rhs.Number.end(); S_it++){
+			C_Pro = *S_it * *D_it + Carry;
+			Carry = C_Pro / 10;
+			C_Pro %= 10;
+			Line_Pro.push_back(C_Pro);
+		}
+		unsigned long long Full_Line = 0;
+		for(int N = 0; N < Line_Pro.size(); N++){
+			Full_Line +=
+			//Whata all this fucking shit... think on it
+			//its not gonna work... hm I fucked it up
+			//
+			//think in otherr solution ..; yamalapata
+			//aralla yema ralla yemma
+			//pf
+
+
+		
+		
+
 
 
 void BigInt::Catching_Error(int x) throw(){

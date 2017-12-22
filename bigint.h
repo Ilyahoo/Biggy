@@ -16,12 +16,12 @@ class BigInt
 
     public:
         BigInt();
-        void FromString(string& From, bool Reverse = true);
+        void FromString(string& From, bool Rev = true);
         void Set_Sign(string& From);
         void Set_Sign(bool What);
 	string ToString();
 	BigInt operator+(BigInt& rhs);
-
+	BigInt operator*(BigInt& rhs);
 
 
         bool Get_Sign() { return G_Sign; }
