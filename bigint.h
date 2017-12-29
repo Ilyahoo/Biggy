@@ -15,14 +15,21 @@ class BigInt
     friend ostream& operator<<(ostream& Out, BigInt& Passed);
 
     public:
-        BigInt();
-        void FromString(string& From, bool Rev = true);
+        BigInt();//notice to overload this with different type and dont forgot to set len and sign
+        void FromString(string& From);
+        void FromString(string& From, bool Rev);
+        void Del_Fst_Zeros(string& From, bool Rev);
         void Set_Sign(string& From);
         void Set_Sign(bool What);
+
 	string ToString();
+	void Del_Fst_Zeros(string& From);
+
+	void FromVector_int(vector<int>& Passed);
 	BigInt operator+(BigInt& rhs);
 	BigInt operator*(BigInt& rhs);
-
+	BigInt operator-();
+ /**   BigInt operator=(BigInt& rhs);**/
 
         bool Get_Sign() { return G_Sign; }
 
