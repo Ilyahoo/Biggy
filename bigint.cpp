@@ -1,9 +1,8 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include <exception>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <exception> /** <- Podha ateth n'hek... but ikhessas rkhadhmeth **/
 #include <cstdlib>
-
 #include "bigint.h"
 
 BigInt::BigInt():G_Sign(true)
@@ -11,6 +10,11 @@ BigInt::BigInt():G_Sign(true)
     //Number.push_back(0);
     //N_Len = Number.size();
 }
+BigInt::BigInt(string Init){
+    FromString(Init);}
+BigInt::BigInt(vector<int> Init):G_Sign(true){
+    FromVector_int(Init);
+    }
 
 
 istream& operator>>(istream& In,  BigInt& Passed){
@@ -38,10 +42,10 @@ string BigInt::ToString(){
 	string Output;
 	try{
         for(vector<int>::reverse_iterator It = Number.rbegin(); It != Number.rend(); It++){
-            char ch = *It + 48;
+            char ch = *It + 48;/**It's for casting in ASCII Mode**/
             if(!isdigit(ch))
-                throw 99;
-            Output += ch; //It's for fucking casting in ASCII Mode
+                throw 99;/** It's an internal Error, Nehra ma th'ignorit**/
+            Output += ch;
         }
 	}catch(int x){
 	    Catching_Error(x);}
@@ -87,8 +91,8 @@ void BigInt::Del_Fst_Zeros(string& From,bool Rev){
         string::iterator Wt = From.begin();
         if(*Wt=='0' && From.size()!=1){
             From.erase(Wt);
-            Del_Fst_Zeros(From,1);
-        }
+            Del_Fst_Zeros(From,1); /** Bash Nehra ma thraghad khikhfanas... ndarit dhi while**/
+        }                           /**Rekho dhini lmochkil n Rev, From which is begin?**/
     }
     else{
         string::iterator Wt = From.end();
@@ -100,7 +104,7 @@ void BigInt::Del_Fst_Zeros(string& From,bool Rev){
 }
 void BigInt::FromString(string& From, bool Rev ){
 
-        Set_Sign(From); //set sign imara togha rasss fuck fuck fuck sign jiht noghirin
+        Set_Sign(From); /**Set Sign,  But raja imara togha ghas jiht naghni.. Ala**/
         Del_Fst_Zeros(From, Rev);
     	try{
 
@@ -110,8 +114,10 @@ void BigInt::FromString(string& From, bool Rev ){
 
  			for( ; s_It != s_ItEnd ; s_It++ ){
 
-            			if(!isdigit(*s_It))
-                			throw 89; // 89 is a not numeric character
+            			if(!isdigit(*s_It)){
+                            if(0)
+                                continue;
+                			throw 89;}
                         Number.push_back(*s_It-48);
 
             		}
@@ -126,7 +132,7 @@ void BigInt::FromString(string& From, bool Rev ){
  			for( ; s_It != s_ItEnd ; s_It++ ){
 
             			if(!isdigit(*s_It))
-                			throw 89; // 89 is a not numeric character
+                			throw 89; /**Non digits Error, Wanita ath n ingora.**/
             			Number.push_back(*s_It-48);
 
             		}
@@ -145,21 +151,22 @@ void BigInt::FromString(string& From, bool Rev ){
 
 
 BigInt BigInt::operator+(BigInt& rhs){
-	// What we need first is to see both sign
-	// after thet we see the bigger num size
+	/** What we need first is to see both sign
+	// after that we see the bigger num size
 	// and we make some calculation
+	// and imara sign wadji kifkif mmch
+	// any way fekka dhayas
 	// and we return the fucking number
-	// stor all the fucking shit in a class Obj
+	// store all the fucking shit in a class Obj **/
 	static BigInt Sum_Obj;
 	string G_Sum;
 	int C_Sum=0;
 	int Carry = 0;
     int nm1,nm2;
-	//wow wow wow
-	//mana degga
-	//adhrmohar ma achyadhaf gha rhs.number
-	//manis tfakadh pffff
-	//kemmer th compilidh th fitchadh
+   /** if(this->G_Sign != rhs.G_Sign){
+        Sum_Obj = *this - rhs;
+        return Sum_Obj;
+    }**/
 
 	int c_Size = (this->N_Len > rhs.N_Len)?this->N_Len:rhs.N_Len;
 
@@ -194,8 +201,8 @@ BigInt BigInt::operator+(BigInt& rhs){
 	Sum_Obj.FromString(G_Sum,0);
 	Sum_Obj.Set_Sign(0);
 	}
-	//Ya99imach dha mzal khmi G_Sign != rhs.G_sign
-	//
+	/** Ya99imach dha mzal khmi G_Sign != rhs.G_sign
+	**/
 	return Sum_Obj;
 }
 
@@ -256,6 +263,87 @@ BigInt BigInt::operator*( BigInt& rhs)  {
 
 }
 
+
+
+void BigInt::Sub_Helper(vector<int>& nm1, vector<int>& nm2){
+    if (nm1[nm1.size()-1] == nm2.size()-1){
+        nm1.pop_back();
+        nm2.pop_back();
+        Sub_Helper(nm1,nm2);
+    }
+    }
+
+
+
+
+
+BigInt BigInt::operator-(BigInt& rhs){
+    BigInt G_Sub;
+   /** if(!rhs.Get_Sign()){
+        BigInt nm2 = rhs;
+        nm2.Set_Sign(1);
+        G_Sub = *this + rhs;
+        return G_Sub;
+    }**/
+    vector<int> nm1 = this->GetNumber();
+    vector<int> nm2 = rhs.GetNumber();
+    bool rhsFlag = 0;
+    bool thisFlag = 0;
+    vector<int> res;
+    vector<int> Bigger;
+    if (nm1.size() == nm2.size()){
+        Sub_Helper(nm1,nm2);
+        if(nm1[nm1.size()-1] > nm2.size()-1){
+            Bigger = nm1;
+            thisFlag = 1;
+        }else{
+            Bigger = nm2;
+            rhsFlag = 1;}
+        }
+    else if(nm1.size()>nm2.size()){
+            Bigger = nm1;
+            thisFlag = 1;
+            }
+    else{
+            Bigger = nm2;
+            rhsFlag = 1;
+        }
+
+    vector<int> Smaller = (Bigger == nm1)?nm2:nm1;
+    int Swaday = 0;
+    int Sennej = 0;
+    int Sub = 0;
+    int smlr;
+    for(int i =0; i<Bigger.size(); i++){
+            Sub  = 0;
+            Sennej = 0;
+            if(i < Smaller.size()){
+                smlr = Smaller[i];
+            }else{
+                smlr = 0;
+                }
+            smlr += Swaday;
+            if(smlr <= Bigger[i]){
+            res.push_back(Bigger[i] - smlr);
+            Swaday = 0;
+            }else{
+            res.push_back(Bigger[i] + 10 - smlr);
+            Swaday = 1;
+            }
+    }
+    if (rhsFlag){
+        G_Sub.Set_Sign(0);
+    }
+    G_Sub.FromVector_int(res);
+    return G_Sub;
+
+
+
+
+    }
+
+
+
 /**BigInt BigInt::operator=(BigInt& rhs){
     this->Number.clear();
     this->Set_Sign(rhs.Get_Sign());
@@ -278,6 +366,122 @@ void BigInt::FromVector_int(vector<int>& Passed){
 	this->N_Len = Number.size();
 }
 
+bool BigInt::operator<(BigInt& rhs){
+    bool lpos = this->Get_Sign();
+    bool rpos = rhs.Get_Sign();
+    if(lpos && !rpos){
+        return false;}
+    if(!lpos && rpos){
+        return true;}
+    if(this->GetN_Len() > rhs.GetN_Len()){
+        return lpos ? false : true;}
+    if(this->GetN_Len() < rhs.GetN_Len()){
+        return lpos ? true : false;}
+    vector<int> n1 = this->GetNumber();
+    vector<int> n2 = rhs.GetNumber();
+    while(n1.back() == n2.back()){
+        n1.pop_back();
+        n2.pop_back();
+    }
+    if(n1.back() < n2.back()){
+            return lpos ? true : false;}
+    if(n1.back() > n2.back()){
+            return lpos ? false : true;}
+
+    return false;
+}
+
+bool BigInt::operator<=(BigInt& rhs){
+    bool lpos = this->Get_Sign();
+    bool rpos = rhs.Get_Sign();
+    if(lpos && !rpos){
+        return false;}
+    if(!lpos && rpos){
+        return true;}
+    if(this->GetN_Len() > rhs.GetN_Len()){
+        return lpos ? false : true;}
+    if(this->GetN_Len() < rhs.GetN_Len()){
+        return lpos ? true : false;}
+    vector<int> n1 = this->GetNumber();
+    vector<int> n2 = rhs.GetNumber();
+    while(n1.back() == n2.back()){
+        n1.pop_back();
+        n2.pop_back();
+    }
+    if(n1.back() < n2.back()){
+            return lpos ? true : false;}
+    if(n1.back() > n2.back()){
+            return lpos ? false : true;}
+
+    return true;
+}
+
+bool BigInt::operator>(BigInt& rhs){
+    bool lpos = this->Get_Sign();
+    bool rpos = rhs.Get_Sign();
+    if(lpos && !rpos){
+        return true;}
+    if(!lpos && rpos){
+        return false;}
+    if(this->GetN_Len() > rhs.GetN_Len()){
+        return lpos ? true : false;}
+    if(this->GetN_Len() < rhs.GetN_Len()){
+        return lpos ? false : true;}
+    vector<int> n1 = this->GetNumber();
+    vector<int> n2 = rhs.GetNumber();
+    while(n1.back() == n2.back()){
+        n1.pop_back();
+        n2.pop_back();
+    }
+    if(n1.back() < n2.back()){
+            return lpos ? false : true;}
+    if(n1.back() > n2.back()){
+            return lpos ? true : false;}
+
+    return false;
+}
+
+bool BigInt::operator>=(BigInt& rhs){
+    bool lpos = this->Get_Sign();
+    bool rpos = rhs.Get_Sign();
+    if(lpos && !rpos){
+        return true;}
+    if(!lpos && rpos){
+        return false;}
+    if(this->GetN_Len() > rhs.GetN_Len()){
+        return lpos ? true : false;}
+    if(this->GetN_Len() < rhs.GetN_Len()){
+        return lpos ? false : true;}
+    vector<int> n1 = this->GetNumber();
+    vector<int> n2 = rhs.GetNumber();
+    while(n1.back() == n2.back()){
+        n1.pop_back();
+        n2.pop_back();
+    }
+    if(n1.back() < n2.back()){
+            return lpos ? false : true;}
+    if(n1.back() > n2.back()){
+            return lpos ? true : false;}
+
+    return true;
+}
+
+
+bool BigInt::operator==(BigInt& rhs){
+    string left = this->ToString();
+    string right = this->ToString();
+    if(!left.compare(right))
+        return true;
+    return false;
+}
+bool BigInt::operator!=(BigInt& rhs){
+    string left = this->ToString();
+    string right = this->ToString();
+    if(left.compare(right))
+        return true;
+    return false;
+}
+
 
 void BigInt::Catching_Error(int x) throw(){
      cerr << endl;
@@ -295,10 +499,5 @@ void BigInt::Catching_Error(int x) throw(){
 
 }
     exit(x);
-   // exception ok("Fuck");
-   //  ok.what(" Fucking shit;");
-     //ok.what("Ok bye");
-   // throw "Fuck";
-  //  errorOut("Whata fuck");
 }
 
